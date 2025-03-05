@@ -1,6 +1,4 @@
 from flask import Blueprint, render_template_string
-
-# Tạo Blueprint cho trang chủ
 trangchu_bp = Blueprint('trangchu', __name__)
 
 @trangchu_bp.route('/')

@@ -1,0 +1,4 @@
+pip install paho-mqtt flask
+pip install flask
+pip install mysql-connector-python
+pip install flask requests
