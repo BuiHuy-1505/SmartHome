@@ -314,6 +314,128 @@ def dieukhien():
         object-fit: cover; /* Giữ tỷ lệ mà không méo */
         border-radius: 8px;
     }
+    /* Lớp phủ mờ nền */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(100, 149, 237, 0.5);
+    z-index: 9;
+}
+
+/* Popup chính */
+.popup-curtain {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffdddd;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 400px; /* Làm popup to hơn */
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.popup-curtain-content h2 {
+    margin-bottom: 20px;
+}
+
+/* Nút đóng popup */
+.curtain-close {
+    font-size: 28px; /* Kích thước chữ */
+    color: #ff7777; /* Màu đỏ nhạt */
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Biến thành hình tròn */
+    background-color: rgba(255, 153, 153, 0.2); /* Nền đỏ nhạt */
+    border: 1px solid #ff9999; /* Viền đỏ nhạt */
+}
+
+.curtain-close:hover {
+    background-color: rgba(255, 102, 102, 0.5); /* Màu đậm hơn khi di chuột vào */
+    color: #ff4444;
+}
+/* Layout nút bấm */
+.curtain-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.curtain-btn-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Nút tròn */
+.curtain-circle-btn {
+    width: 70px;
+    height: 70px;
+    background: #66b3ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 55%;
+    font-size: 23px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.curtain-circle-btn.stop {
+    background: #ffcc00;
+}
+
+.curtain-circle-btn:hover {
+    background: #0056b3;
+}
+
+.curtain-circle-btn.stop:hover {
+    background: #e6b800;
+}
+
+/* Nhãn dưới nút */
+.curtain-label {
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+.main-footer {
+    position: relative; /* Đảm bảo nó không cố định */
+    width: 1175px; /* Chiều ngang full màn hình */
+    text-align: right;
+    font-size: 16px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    margin: 0; /* Loại bỏ khoảng cách thừa */
+    left: 65px; /* Dời toàn bộ footer sang phải */
+    box-sizing: border-box; /* Đảm bảo không bị tràn */
+}
+
+.main-content {
+    flex: 1; /* Đẩy footer xuống cuối */
+}
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
     </style>
 </head>
 <body>
@@ -350,16 +472,33 @@ def dieukhien():
                 <img src="https://rangdong.com.vn/uploads/product/thiet-bi-dien/CTCU.BLE-CN.REM/CTCU.BLE-CN.REM--Den.jpg">
             </div>
         </div>
+<!-- Lớp nền mờ -->
+<div id="curtain-overlay" class="overlay" onclick="closeCurtainPopup()"></div>
+
 <!-- Popup Điều Khiển Rèm -->
 <div id="curtain-popup" class="popup-curtain">
     <div class="popup-curtain-content">
-        <span class="curtain-close" onclick="closePopup('curtain-popup')">&times;</span>
-        <h2>Điều khiển Rèm</h2>
-        <div class="curtain-circle-btn">
-            ⏺
+        <span class="curtain-close" onclick="closeCurtainPopup()">&times;</span>
+        <h2 style="text-align: center; color: #555555; font-size: 24px; font-weight: bold;">
+            Điều khiển Rèm
+        </h2>
+        <div class="curtain-buttons">
+            <div class="curtain-btn-group">
+                <div class="curtain-circle-btn" onclick="controlCurtain('open')">◀️▶️</div>
+                <span class="curtain-label">Mở rèm</span>
+            </div>
+            <div class="curtain-btn-group">
+                <div class="curtain-circle-btn stop" onclick="controlCurtain('stop')">⏹</div>
+                <span class="curtain-label">Dừng</span>
+            </div>
+            <div class="curtain-btn-group">
+                <div class="curtain-circle-btn" onclick="controlCurtain('close')">▶️◀️</div>
+                <span class="curtain-label">Đóng rèm</span>
+            </div>
         </div>
     </div>
 </div>
+
 
     </div>
 
@@ -395,10 +534,12 @@ def dieukhien():
 
     function openCurtainPopup() {
         document.getElementById("curtain-popup").style.display = "block";
+        document.getElementById('curtain-overlay').style.display = 'block';
     }
 
     function closeCurtainPopup() {
         document.getElementById("curtain-popup").style.display = "none";
+        document.getElementById('curtain-overlay').style.display = 'none';
     }
 
     // Đóng popup khi bấm ra ngoài
@@ -414,6 +555,9 @@ def dieukhien():
         }
     });
 </script>
+<footer class="main-footer">
+    Liên hệ khi có sự cố: <b>09xxxx</b>
+</footer>
 
 </body>
 </html>
