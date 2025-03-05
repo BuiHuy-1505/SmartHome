@@ -299,7 +299,21 @@ def dieukhien():
     width: calc(100% - 40px); /* Để chiếm ngang bằng 2 đèn */
     max-width: 800px;
     }
+    .device.curtain-control {
+        width: 100%; 
+        max-width: 520px; /* Mở rộng khung rèm cửa */
+        margin: 40px auto; /* Căn giữa */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
+    .device.curtain-control .light-wrapper img {
+        width: 450px; /* Ảnh chiếm toàn bộ chiều rộng khung */
+        height: 220px; /* Giữ nguyên chiều cao */
+        object-fit: cover; /* Giữ tỷ lệ mà không méo */
+        border-radius: 8px;
+    }
     </style>
 </head>
 <body>
@@ -334,9 +348,8 @@ def dieukhien():
             <h2>Rèm cửa</h2>
             <div class="light-wrapper">
                 <img src="https://rangdong.com.vn/uploads/product/thiet-bi-dien/CTCU.BLE-CN.REM/CTCU.BLE-CN.REM--Den.jpg">
+            </div>
         </div>
-
-
 <!-- Popup Điều Khiển Rèm -->
 <div id="curtain-popup" class="popup-curtain">
     <div class="popup-curtain-content">
