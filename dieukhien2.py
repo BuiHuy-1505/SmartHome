@@ -49,21 +49,23 @@ def dieukhien2():
             font-family: 'Arial', sans-serif;
         }
         body {
-            background: url('https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474103dby/background-cong-nghe-dep_034236048.jpg') no-repeat center center fixed;
+            background: url('https://gitiho.com/caches/p_medium_large//uploads/315313/images/image_hinh-nen-powerpoint-tin-hoc-6.jpg') no-repeat center center fixed;
             background-size: cover;
             color: white;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            min-height: 100vh; /* Cho phép dài ra nếu có thêm nội dung */
             padding: 20px;
         }
+
         .wrapper {
             width: 90%;
             max-width: 800px;
+            flex-grow: 1; /* Để wrapper mở rộng nếu cần thiết */
         }
+
         .container {
             position: absolute;
             top: 20px; /* Đẩy lên sát mép trên */
@@ -77,48 +79,32 @@ def dieukhien2():
         }
         .device-container {
             display: flex;
-            justify-content: space-around; /* Đẩy hai đèn ra xa nhau */
-            gap: 40px; /* Tăng khoảng cách giữa hai đèn */
-            margin-top: 20px;
-            flex-wrap: nowrap; /* Giữ nguyên hàng ngang */
+            justify-content: center; /* Căn giữa cảm biến */
+            gap: 80px; /* Tăng khoảng cách giữa hai cảm biến */
+            margin-top: 100px;
         }
 
         .device {
-            width: 48%; /* Giữ nguyên bề ngang */
-            max-width: 550px;
-            height: 300px; /* Giới hạn chiều cao */
+            width: 80%; /* Tăng thêm chiều rộng */
+            max-width: 700px; /* Giữ kích thước hợp lý trên màn hình lớn */
+            height: 300px; /* Giữ nguyên chiều cao */
             background: rgba(0, 0, 0, 0.6);
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
             cursor: pointer;
             text-align: center;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Căn giữa nội dung */
+            justify-content: center;
         }
+
         .light-wrapper img {
             width: 100%;
             height: 220px; /* Giới hạn chiều cao ảnh */
             object-fit: cover; /* Cắt ảnh nếu quá lớn */
             border-radius: 8px;
         }
-        .back {
-            position: fixed;
-            bottom: 20px; /* Cách mép dưới 20px */
-            right: 20px; /* Cách mép phải 20px */
-            padding: 10px 15px;
-            color: white;
-            text-decoration: none;
-            border: 2px solid white;
-            border-radius: 5px;
-            background: rgba(0, 0, 0, 0.6);
-            font-weight: bold;
-            transition: background 0.3s ease;
-        }
-
-        .back:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
+        
         /* Popup */
         .popup-overlay {
             position: fixed;
@@ -240,6 +226,59 @@ def dieukhien2():
         .sidebar a:hover {
             background: rgba(255, 255, 255, 0.2);
         }
+        .sidebar .back {
+            display: block;
+            position: absolute;
+            bottom: 10px; /* Căn sát đáy sidebar */
+            left: 50%; 
+            transform: translateX(-50%); /* Căn giữa theo chiều ngang */
+            padding: 5px 10px;
+            font-size: 14px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border: 1px solid white;
+            border-radius: 3px;
+            background: rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            transition: background 0.3s ease;
+            width: 80%; /* Giúp nút không quá rộng */
+        }
+
+        .sidebar .back:hover {
+            background: rgba(255, 255, 255, 0.2);
+        } 
+        /* Popup Rèm */
+    
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Giúp căn giữa nội dung nếu trang ít dữ liệu */
+    width: 100%;
+}
+.main-footer {
+    position: relative; 
+    width: 1188px; 
+    text-align: right;
+    font-size: 16px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    margin: 0; /* Loại bỏ khoảng cách thừa */
+    left: 65px; 
+    box-sizing: border-box; 
+}
+
     </style>
 </head>
 <body>
@@ -247,59 +286,70 @@ def dieukhien2():
         <h2 class="menu-title">Menu tùy chọn</h2>
         <a href="/dieukhien">🔹 Công tắc đèn, rèm cửa</a>
         <a href="/dieukhien2">🔹 Các cảm biến</a>
+        <a href="/ketnoi" class="back" >🔙 Quay lại</a>
     </div>
+    
     <div class="wrapper">
         <div class="container">
             <h1>Xin chào, {{ user_name }}! 👋</h1>
             <p>Điều khiển thiết bị trong căn phòng</p>
         </div>
         <div class="device-container">
-            <div class="device" onclick="openPopup()">
+            <div class="device" onclick="openPopup('Đèn 001')">
                 <h2>Cảm biến khói</h2>
                 <div class="light-wrapper">
-                    <img src="https://bizweb.dktcdn.net/100/461/914/products/cong-tac-cam-ung-thong-minh-2.jpg">
+                    <img src="https://rangdong.com.vn/uploads/product/Smart/CB11.SM.WF/CB11.SM.WF-1.jpg">
                 </div>
             </div>
-            <div class="device" onclick="openPopup()">
-                <h2>Cảm biến cửa</h2>
+            <div class="device" onclick="openPopup('Đèn 002')">
+                <h2>Cảm biến cửa </h2>
                 <div class="light-wrapper">
-                    <img src="https://bizweb.dktcdn.net/100/461/914/products/cong-tac-cam-ung-thong-minh-2.jpg">
+                    <img src="https://rangdong.com.vn/uploads/product/Smart/CB16.DO.BLE/CB16.DO.BLE-1.jpg">
                 </div>
             </div>
         </div>
-        <a href="/ketnoi" class="back" >🔙 Quay lại</a>
     </div>
-
     <!-- Popup -->
     <div id="popup" class="popup-overlay">
         <div class="popup-content">
             <button class="close-btn" onclick="closePopup()">×</button>
-            <h3 class="popup-title">Tùy Chọn Đèn</h3><br>
-            <div class="rectangle">
-                <div class="circle top-left">🔴</div>
-                <div class="circle top-right">🟢</div>
-                <div class="circle bottom-left">🟡</div>
-                <div class="circle bottom-right">🟣</div>
-            </div>
+            
         </div>
     </div>
 
-    <script>
-        function openPopup() {
-            document.getElementById("popup").style.display = "flex";
-            setTimeout(() => document.getElementById("popup").classList.add("active"), 10);
+   <script>
+    function openPopup(deviceName) {
+        if (deviceName === 'curtain-popup') {
+            openCurtainPopup();
+            return;
         }
-        function closePopup() {
-            document.getElementById("popup").classList.remove("active");
-            setTimeout(() => document.getElementById("popup").style.display = "none", 300);
+        document.getElementById("popup").style.display = "flex";
+        document.querySelector(".popup-title").textContent = "Tùy Chọn " + deviceName;
+        setTimeout(() => document.getElementById("popup").classList.add("active"), 10);
+    }
+
+    function closePopup() {
+        document.getElementById("popup").classList.remove("active");
+        setTimeout(() => document.getElementById("popup").style.display = "none", 300);
+    }
+
+    // Đóng popup khi bấm ra ngoài
+    document.getElementById("popup").addEventListener("click", function(event) {
+        if (event.target === this) {
+            closePopup();
         }
-        // Đóng popup khi bấm ra ngoài
-        document.getElementById("popup").addEventListener("click", function(event) {
-            if (event.target === this) {
-                closePopup();
-            }
-        });
-    </script>
+    });
+
+    document.getElementById("curtain-popup").addEventListener("click", function(event) {
+        if (event.target === this) {
+            closeCurtainPopup();
+        }
+    });
+</script>
+<footer class="main-footer">
+    Liên hệ khi có sự cố: <b>09xxxx</b>
+</footer>
+
 </body>
 </html>
 

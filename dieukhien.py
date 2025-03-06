@@ -427,7 +427,6 @@ def dieukhien():
     left: 65px; 
     box-sizing: border-box; 
 }
-
 .main-content {
     flex: 1; 
 }
@@ -458,7 +457,6 @@ html, body {
                     <img src="https://bizweb.dktcdn.net/100/461/914/products/cong-tac-cam-ung-thong-minh-2.jpg">
                 </div>
             </div>
-
             <div class="device" onclick="openPopup('Đèn 002')">
                 <h2>Đèn 002</h2>
                 <div class="light-wrapper">
