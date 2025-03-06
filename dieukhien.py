@@ -416,20 +416,20 @@ def dieukhien():
     color: #333;
 }
 .main-footer {
-    position: relative; /* Đảm bảo nó không cố định */
-    width: 1175px; /* Chiều ngang full màn hình */
+    position: relative; 
+    width: 1175px; 
     text-align: right;
     font-size: 16px;
     color: #fff;
     background: rgba(0, 0, 0, 0.6);
     padding: 15px;
     margin: 0; /* Loại bỏ khoảng cách thừa */
-    left: 65px; /* Dời toàn bộ footer sang phải */
-    box-sizing: border-box; /* Đảm bảo không bị tràn */
+    left: 65px; 
+    box-sizing: border-box; 
 }
 
 .main-content {
-    flex: 1; /* Đẩy footer xuống cuối */
+    flex: 1; 
 }
 html, body {
     height: 100%;
