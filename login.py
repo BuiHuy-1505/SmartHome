@@ -31,7 +31,7 @@ def login():
                 session['ses_name'] = user['ho_ten']
                 cursor.close()
                 db.close()
-                return redirect(url_for('dieukhien.dieukhien'))  # Đảm bảo tên endpoint chính xác ở đây
+                return redirect(url_for('ketnoi.ketnoi'))  # Đảm bảo tên endpoint chính xác ở đây
             else:
                 error = "Tên truy cập hoặc mật khẩu không chính xác."
             cursor.close()

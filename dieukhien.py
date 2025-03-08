@@ -1,36 +1,72 @@
-import paho.mqtt.client as mqtt
+import json
+import requests
 import logging
-from flask import Blueprint, session, redirect, url_for, render_template_string, request, jsonify
+from flask import Blueprint, session, redirect, url_for, render_template, request, jsonify
+from flask import render_template_string
 
 dieukhien_bp = Blueprint('dieukhien', __name__)
 
-# Cấu hình MQTT
-MQTT_BROKER = "10.10.10.1"
-MQTT_PORT = 1883
-MQTT_TOPIC_LIGHT1 = "rd-hc01/light1"
-MQTT_TOPIC_LIGHT2 = "rd-hc01/light2"
+# 🔹 Cấu hình API Cloud Rạng Đông
+DOMAIN = "https://rallismartv2.rangdong.com.vn"
+LOGIN_URL = f"{DOMAIN}/rpc/iot-ebe/account/login"
+CONTROL_DEVICE_URL = f"{DOMAIN}/rpc/iot-ebe/control/device"
 
-# Tạo MQTT client
-mqtt_client = mqtt.Client()
-try:
-    mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
-except Exception as e:
-    logging.error(f"Lỗi MQTT: {e}")
+# 🔹 Tài khoản Cloud Rạng Đông
+USERNAME = "0773342857"
+PASSWORD = "Ngoc2403@"
 
-# Hàm gửi lệnh MQTT
-def send_mqtt_command(topic, message):
-    try:
-        mqtt_client.publish(topic, message)
-        return True
-    except Exception as e:
-        logging.error(f"Lỗi MQTT: {e}")
+# ✅ Hàm đăng nhập & lấy token
+def get_token():
+    data = {"username": USERNAME, "password": PASSWORD}
+    response = requests.post(LOGIN_URL, json=data)
+    
+    if response.status_code == 200:
+        res_json = response.json()
+        return res_json.get("token")
+    else:
+        logging.error(f"❌ Lỗi đăng nhập: {response.text}")
+        return None
+
+# ✅ Hàm gửi lệnh điều khiển thiết bị
+def control_device(device_id, command):
+    token = get_token()
+    if not token:
         return False
 
+    headers = {"Authorization": f"Bearer {token}"}
+    payload = {
+        "id": device_id,
+        "data": {"onoff0": 1 if command == "on" else 0}  # 1 = Bật, 0 = Tắt
+    }
+    
+    response = requests.post(CONTROL_DEVICE_URL, headers=headers, json=payload)
+    
+    if response.status_code == 200:
+        return True
+    else:
+        logging.error(f"❌ Lỗi gửi lệnh: {response.text}")
+        return False
+
+# ✅ Route API để điều khiển thiết bị từ giao diện web
+@dieukhien_bp.route('/control', methods=['POST'])
+def control():
+    data = request.json
+    device_id = data.get("device_id")
+    command = data.get("command")
+
+    if not device_id or not command:
+        return jsonify({"message": "❌ Thiếu thông tin!"}), 400
+
+    if control_device(device_id, command):
+        return jsonify({"message": "✅ Điều khiển thành công!"}), 200
+    else:
+        return jsonify({"message": "❌ Điều khiển thất bại!"}), 500
+
+# ✅ Route để hiển thị giao diện điều khiển
 @dieukhien_bp.route('/dieukhien')
 def dieukhien():
     if 'ses_user' not in session:
         return redirect(url_for('login.login'))
-
     user_name = session.get('ses_name', 'Người dùng')
 
     dieukhien_html = '''
@@ -513,6 +549,18 @@ html, body {
             </div>
         </div>
     </div>
+    <script>
+    function controlDevice(deviceId, command) {
+        fetch('/control', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ device_id: deviceId, command: command })
+        })
+        .then(response => response.json())
+        .then(data => alert(data.message))
+        .catch(error => alert('❌ Lỗi điều khiển!'));
+    }
+</script>
 
    <script>
     function openPopup(deviceName) {
